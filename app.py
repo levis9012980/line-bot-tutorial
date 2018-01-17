@@ -540,11 +540,13 @@ def craw_page(res, push_rate):
     return article_seq
 
 
-def getGirlImages(_page=0):
+def getGirlImages():
     client = ImgurClient(imageconfig['client_id'], imageconfig['client_secret'], imageconfig['access_token'],
                          imageconfig['refresh_token'])
     albumslist = []
-    list = client.get_account_albums(imageconfig['username'], _page)
+    count = client.get_account_album_count(imageconfig['username'])
+    _page = random.randint(0, count)/50
+    list = client.get_account_albums(imageconfig['username'], page=_page)
     for albums in list:
         albumslist.append(albums.id)
     slice = random.sample(albumslist, 1)
@@ -552,12 +554,12 @@ def getGirlImages(_page=0):
     images = client.get_album_images(album_id)
     try:
         index = random.randint(0, len(images) - 1)
-    except:
-        getGirlImages(1)
+    except Exception as e:
+        print(e)
+        getGirlImages()
     url = images[index].link
     return str(url)
 
 
 if __name__ == "__main__":
-    # app.run()
-    getGirlImages()
+    app.run()
