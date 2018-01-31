@@ -545,7 +545,7 @@ def getGirlImages():
                          imageconfig['refresh_token'])
     albumslist = []
     count = client.get_account_album_count(imageconfig['username'])
-    _page = random.randint(0, count)/50
+    _page = random.randint(0, count) / 50
     list = client.get_account_albums(imageconfig['username'], page=_page)
     for albums in list:
         albumslist.append(albums.id)
