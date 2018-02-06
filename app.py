@@ -329,8 +329,9 @@ def handle_message(event):
         return 0
 
     if event.message.text == "抽":
-        content = getGirlImages()
+        content,title = getGirlImages()
         SendImages(content, event)
+        send_message()
         return 0
 
 
@@ -348,6 +349,9 @@ def SendImages(content, event):
         print(e.error.message)
         print(e.error.details)
 
+def send_message(token, _str):
+    line_bot_api.push_message(_groupId,
+                              TextSendMessage(text=_str))
 
 @app.route("/")
 def get_index():
@@ -552,14 +556,17 @@ def getGirlImages():
     slice = random.sample(albumslist, 1)
     album_id = slice[0]
     images = client.get_album_images(album_id)
+    imageInfo = client.get_album(album_id)
+    title = imageInfo.title
     try:
         index = random.randint(0, len(images) - 1)
     except Exception as e:
         print(e)
         getGirlImages()
     url = images[index].link
-    return str(url)
+    return str(url),str(title)
 
 
 if __name__ == "__main__":
     app.run()
+    # getGirlImages()
